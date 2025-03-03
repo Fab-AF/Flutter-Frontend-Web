@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { DropdownItem } from "../ui/dropdown/DropdownItem";
-import { Dropdown } from "../ui/dropdown/Dropdown";
+import { DropdownItem } from "../ui/dropdown/DropdownItem.js";
+import { Dropdown } from "../ui/dropdown/Dropdown.js";
 import { Link, useNavigate } from "react-router"; // Use useNavigate from react-router-dom
 import { logout } from "../../redux/auth/authApi.js"; // Assuming you have a logout function in your API
+import Cookies from "js-cookie";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,7 +20,8 @@ export default function UserDropdown() {
   async function handleLogout() {
     try {
       await logout(); // Call the logout API
-      navigate("/signin"); // Redirect to sign-in page after logout
+      Cookies.remove("token"); // Remove token from cookies
+      navigate("/"); // Redirect to sign-in page after logout
     } catch (error) {
       console.error("Logout failed", error); // Handle error appropriately
     }

@@ -35,11 +35,15 @@ export const signUp = async (email, password) => {
 
 export const logout = async () => {
   try {
+    const token = Cookies.get("token");
     await axios.post(
       `${baseurl}/users/logout`,
-      {},
+      {}, // Empty body
       {
-        withCredentials: true, // Ensure cookies are included in requests
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true // Ensure cookies are included in requests
       }
     );
 
@@ -51,3 +55,16 @@ export const logout = async () => {
   }
 };
 
+export const getAllUsers = async () => {
+  try {
+    const token = Cookies.get("token");
+    const response = await axios.get(`${baseurl}/users`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response ? error.response.data.message : 'Failed to fetch users');
+  }
+};

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useLocation,Link } from "react-router";
+import { useLocation, Link } from "react-router";
 import { FaChevronDown } from "react-icons/fa6";
 import { MdSpaceDashboard } from "react-icons/md";
 import { RiHotelLine } from "react-icons/ri";
@@ -9,14 +9,7 @@ import { FiMoreHorizontal } from "react-icons/fi";
 
 import { useSidebar } from "../context/SidebarContext";
 
-type NavItem = {
-  name: string;
-  icon: React.ReactNode;
-  path?: string;
-  subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
-};
-
-const navItems: NavItem[] = [
+const navItems = [
   {
     icon: <MdSpaceDashboard />,
     name: "Dashboard",
@@ -39,21 +32,16 @@ const navItems: NavItem[] = [
   },
 ];
 
-const AppSidebar: React.FC = () => {
+const AppSidebar = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
 
-  const [openSubmenu, setOpenSubmenu] = useState<{
-    type: "main";
-    index: number;
-  } | null>(null);
-  const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>(
-    {}
-  );
-  const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const [openSubmenu, setOpenSubmenu] = useState(null);
+  const [subMenuHeight, setSubMenuHeight] = useState({});
+  const subMenuRefs = useRef({});
 
   const isActive = useCallback(
-    (path: string) => location.pathname === path,
+    (path) => location.pathname === path,
     [location.pathname]
   );
 
@@ -66,7 +54,7 @@ const AppSidebar: React.FC = () => {
           nav.subItems.forEach((subItem) => {
             if (isActive(subItem.path)) {
               setOpenSubmenu({
-                type: menuType as "main",
+                type: menuType,
                 index,
               });
               submenuMatched = true;
@@ -93,7 +81,7 @@ const AppSidebar: React.FC = () => {
     }
   }, [openSubmenu]);
 
-  const handleSubmenuToggle = (index: number, menuType: "main") => {
+  const handleSubmenuToggle = (index, menuType) => {
     setOpenSubmenu((prevOpenSubmenu) => {
       if (
         prevOpenSubmenu &&
@@ -106,7 +94,7 @@ const AppSidebar: React.FC = () => {
     });
   };
 
-  const renderMenuItems = (items: NavItem[], menuType: "main") => (
+  const renderMenuItems = (items, menuType) => (
     <ul className="flex flex-col gap-4">
       {items.map((nav, index) => (
         <li key={nav.name}>
@@ -194,7 +182,7 @@ const AppSidebar: React.FC = () => {
                       }`}
                     >
                       {subItem.name}
-                      <span className="flex items-center gap-1 ml-auto">
+                      <span className="flex items-center gap极1 ml-auto">
                         {subItem.new && (
                           <span
                             className={`ml-auto ${

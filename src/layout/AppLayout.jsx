@@ -2,9 +2,9 @@ import { SidebarProvider, useSidebar } from "../context/SidebarContext";
 import { Outlet } from "react-router";
 import AppHeader from "./AppHeader";
 import Backdrop from "./Backdrop";
-import AppSidebar from "./AppSidebar";
+import AppSidebar from "./AppSidebar"
 
-const LayoutContent: React.FC = () => {
+const LayoutContent = () => {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
 
   return (
@@ -27,7 +27,7 @@ const LayoutContent: React.FC = () => {
   );
 };
 
-const AppLayout: React.FC = () => {
+const AppLayout = () => {
   return (
     <SidebarProvider>
       <LayoutContent />

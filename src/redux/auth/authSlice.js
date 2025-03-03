@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { signIn } from './authApi';
+import { signIn, getAllUsers } from './authApi';
 import Cookies from 'js-cookie'; // Import js-cookie to manage cookies
 
 export const signInUser = createAsyncThunk('auth/signInUser', async ({ email, password }) => {
@@ -10,12 +10,20 @@ export const signInUser = createAsyncThunk('auth/signInUser', async ({ email, pa
   return response;
 });
 
+export const fetchAllUsers = createAsyncThunk('auth/fetchAllUsers', async () => {
+  const response = await getAllUsers();
+  return response;
+});
+
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
     user: null,
+    users: [],
     loading: false,
     error: null,
+    usersLoading: false,
+    usersError: null,
   },
   reducers: {
     logout(state) {
@@ -36,6 +44,18 @@ const authSlice = createSlice({
       .addCase(signInUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+      })
+      .addCase(fetchAllUsers.pending, (state) => {
+        state.usersLoading = true;
+        state.usersError = null;
+      })
+      .addCase(fetchAllUsers.fulfilled, (state, action) => {
+        state.usersLoading = false;
+        state.users = action.payload;
+      })
+      .addCase(fetchAllUsers.rejected, (state, action) => {
+        state.usersLoading = false;
+        state.usersError = action.error.message;
       });
   },
 });
