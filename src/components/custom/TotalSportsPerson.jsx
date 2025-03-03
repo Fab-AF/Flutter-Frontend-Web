@@ -3,12 +3,33 @@ import { useTheme } from '../../context/ThemeContext.js';
 import DataTable from "react-data-table-component";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllUsers } from '../../redux/auth/authSlice';
+import { FiEdit, FiEye, FiTrash2 } from 'react-icons/fi';
+import { LuUserCheck } from 'react-icons/lu';
 
 const columns = [
   { name: "ID", selector: (row) => row._id, sortable: true },
   { name: "Name", selector: (row) => row.name, sortable: true },
   { name: "Email", selector: (row) => row.email },
   { name: "Role", selector: (row) => row.role },
+  {
+    name: "Actions",
+    cell: (row) => (
+      <div className="flex gap-2">
+        <button className="p-1 text-gray-500 hover:text-blue-600 dark:hover:text-blue-400">
+          <FiEye size={18} />
+        </button>
+        <button className="p-1 text-gray-500 hover:text-purple-600 dark:hover:text-purple-400">
+          <LuUserCheck size={18} />
+        </button>
+        <button className="p-1 text-gray-500 hover:text-green-600 dark:hover:text-green-400">
+          <FiEdit size={18} />
+        </button>
+        <button className="p-1 text-gray-500 hover:text-red-600 dark:hover:text-red-400">
+          <FiTrash2 size={18} />
+        </button>
+      </div>
+    ),
+  },
 ];
 
 const TotalSportsPerson = () => {
