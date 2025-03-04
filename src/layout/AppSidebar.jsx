@@ -8,6 +8,8 @@ import { MdSportsMartialArts } from "react-icons/md";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { BiCategory } from "react-icons/bi";
 import { TbReportMedical } from "react-icons/tb";
+import { LiaUserCheckSolid } from "react-icons/lia";
+
 import { GiMedicines } from "react-icons/gi";
 
 import { useSidebar } from "../context/SidebarContext";
@@ -54,6 +56,11 @@ const navItems = [
         icon: <BiCategory className="w-4 h-4" />,
       },
     ],
+  },
+  {
+    name: "Roles",
+    icon: <LiaUserCheckSolid />,
+    path: "/roles",
   },
 ];
 
