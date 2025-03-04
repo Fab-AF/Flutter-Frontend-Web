@@ -3,9 +3,70 @@ import { Modal } from "../ui/modal";
 import Button from "../ui/button/Button";
 import Input from "../form/input/InputField";
 import Label from "../form/Label";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 export default function UserInfoCard() {
   const { isOpen, openModal, closeModal } = useModal();
+  const [user, setUser] = useState(null);
+  const [currentUserId, setCurrentUserId] = useState(null);
+  const myData = useSelector((state) => state.auth.users);
+
+  // Extract all user IDs from the response data
+  const getAllUserIds = (users) => {
+    if (!users || typeof users !== "object") {
+      console.log("Invalid user data:", users);
+      return [];
+    }
+
+    console.log("Extracting user IDs from:", users); // Debug log
+    const ids = [];
+
+    ["superadmins", "doctors", "sportspersons", "clubs"].forEach((role) => {
+      if (users?.[role]?.length > 0) {
+        users[role].forEach((user) => {
+          if (user?._id) {
+            console.log(`Adding ${role} ID:`, user._id);
+            ids.push(user._id);
+          }
+        });
+      } else {
+        console.log(`No ${role} found or empty array`);
+      }
+    });
+
+    console.log("Total IDs collected:", ids.length, ids); // Debug log
+    return ids;
+  };
+
+  useEffect(() => {
+    if (myData?.users) {
+      const userIds = getAllUserIds(myData.users);
+      console.log("All User IDs:", userIds);
+
+      // Load user from localStorage
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        const userData = JSON.parse(storedUser);
+        setUser(userData);
+        const currentId = userData._id;
+        console.log("Current User ID:", currentId);
+
+        // Compare current ID with all IDs
+        if (userIds.includes(currentId)) {
+          setCurrentUserId(currentId);
+          console.log("Matched Current User ID:", currentId);
+        } else {
+          console.log("Current User ID not found in collected IDs");
+        }
+      } else {
+        console.log("No user data found in localStorage");
+      }
+    } else {
+      console.log("myData.users is undefined or empty");
+    }
+  }, [myData]);
+
   const handleSave = () => {
     // Handle save logic here
     console.log("Saving changes...");

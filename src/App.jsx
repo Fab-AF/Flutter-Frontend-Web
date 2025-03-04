@@ -4,7 +4,7 @@ import store from "./redux/store.js";
 import SignIn from "./pages/AuthPages/SignIn.tsx";
 import SignUp from "./pages/AuthPages/SignUp.tsx";
 import NotFound from "./pages/OtherPage/NotFound.tsx";
-import UserProfiles from "./pages/UserProfiles.tsx";
+import UserProfiles from "./pages/UserProfiles.jsx";
 import Calendar from "./pages/Calendar.tsx";
 import BasicTables from "./pages/Tables/BasicTables.tsx";
 import FormElements from "./pages/Forms/FormElements.tsx";
