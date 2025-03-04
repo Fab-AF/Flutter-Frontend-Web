@@ -4,9 +4,13 @@ import { fetchAllUsers } from '../../redux/auth/authSlice';
 import { RiHotelLine } from "react-icons/ri";
 import { FaUserDoctor } from "react-icons/fa6";
 import { MdSportsMartialArts } from "react-icons/md";
+import { useNavigate } from 'react-router-dom';
 
-const MetricCard = ({ icon: Icon, title, value, loading }) => (
-  <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
+const MetricCard = ({ icon: Icon, title, value, loading, onClick }) => (
+  <div 
+    className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6 cursor-pointer hover:bg-gray-50 transition-colors"
+    onClick={onClick}
+  >
     <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
       <Icon className="text-gray-800 size-6 dark:text-white/90" />
     </div>
@@ -25,6 +29,7 @@ const MetricCard = ({ icon: Icon, title, value, loading }) => (
 
 export default function EcommerceMetrics() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { usersLoading } = useSelector((state) => state.auth);
   const [counts, setCounts] = useState({
     clubs: 0,
@@ -54,21 +59,40 @@ export default function EcommerceMetrics() {
     fetchData();
   }, [dispatch]);
 
+  const handleCardClick = (type) => {
+    switch(type) {
+      case 'clubs':
+        navigate('/total-clubs');
+        break;
+      case 'doctors':
+        navigate('/total-doctors');
+        break;
+      case 'sportsPersons':
+        navigate('/total-sports-person');
+        break;
+      default:
+        break;
+    }
+  };
+
   const metrics = useMemo(() => [
     {
       icon: RiHotelLine,
       title: 'Total Clubs',
-      value: counts.clubs
+      value: counts.clubs,
+      onClick: () => handleCardClick('clubs')
     },
     {
       icon: FaUserDoctor,
       title: 'Total Doctors',
-      value: counts.doctors
+      value: counts.doctors,
+      onClick: () => handleCardClick('doctors')
     },
     {
       icon: MdSportsMartialArts,
       title: 'Total Sportsperson',
-      value: counts.sportsPersons
+      value: counts.sportsPersons,
+      onClick: () => handleCardClick('sportsPersons')
     }
   ], [counts]);
 
@@ -81,6 +105,7 @@ export default function EcommerceMetrics() {
           title={metric.title}
           value={metric.value}
           loading={usersLoading}
+          onClick={metric.onClick}
         />
       ))}
     </div>

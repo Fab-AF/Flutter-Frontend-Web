@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, Link } from "react-router";
-import { FaChevronDown } from "react-icons/fa6";
+import { FaChevronDown, FaUser } from "react-icons/fa6";
 import { MdSpaceDashboard } from "react-icons/md";
 import { RiHotelLine } from "react-icons/ri";
 import { FaUserDoctor } from "react-icons/fa6";
@@ -8,6 +8,7 @@ import { MdSportsMartialArts } from "react-icons/md";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { BiCategory } from "react-icons/bi";
 import { TbReportMedical } from "react-icons/tb";
+import { GiMedicines } from "react-icons/gi";
 
 import { useSidebar } from "../context/SidebarContext";
 
@@ -19,22 +20,22 @@ const navItems = [
   },
   {
     name: "Users",
-    icon: <FaUserDoctor />,
+    icon: <FaUser/>,
     subItems: [
       {
+        icon: <RiHotelLine />,
         name: "Total Clubs",
         path: "/total-clubs",
-        icon: <RiHotelLine />,
       },
       {
+        icon: <FaUserDoctor />,
         name: "Total Doctors",
         path: "/total-doctors",
-        icon: <FaUserDoctor />,
       },
       {
+        icon: <MdSportsMartialArts />,
         name: "Total Sports Person",
         path: "/total-sports-person",
-        icon: <MdSportsMartialArts />,
       },
     ],
   },
@@ -45,12 +46,12 @@ const navItems = [
       {
         name: "Total Medicine",
         path: "/total-products",
-        icon: <TbReportMedical />,
+        icon: <GiMedicines/>,
       },
       {
         name: "Total Categories",
         path: "/total-categories",
-        icon: <BiCategory />,
+        icon: <BiCategory className="w-4 h-4" />,
       },
     ],
   },
@@ -199,12 +200,13 @@ const AppSidebar = () => {
                   <li key={subItem.name}>
                     <Link
                       to={subItem.path}
-                      className={`menu-dropdown-item ${
+                      className={`menu-dropdown-item flex items-center gap-2 ${
                         isActive(subItem.path)
                           ? "menu-dropdown-item-active"
                           : "menu-dropdown-item-inactive"
                       }`}
                     >
+                      <span>{subItem.icon}</span>
                       {subItem.name}
                     </Link>
                   </li>
