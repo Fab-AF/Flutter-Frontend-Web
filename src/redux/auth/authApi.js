@@ -3,7 +3,7 @@ import Cookies from "js-cookie"; // Import js-cookie to manage cookies
 import process from "process";
 
 // const baseurl = process.env.BACKEND_API_URL; 
-const baseurl = "http://localhost:5000/api"; 
+const baseurl = "http://localhost:5000/api";
 
 
 export const signIn = async (email, password) => {
@@ -26,6 +26,23 @@ export const signUp = async (email, password) => {
       email,
       password,
     });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response ? error.response.data : 'Sign up failed');
+  }
+};
+
+export const register = async (data) => {
+  try {
+    const token = Cookies.get("token");
+    const response = await axios.post(`${baseurl}/users/register`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     throw new Error(error.response ? error.response.data : 'Sign up failed');
