@@ -11,6 +11,9 @@ import FormElements from "./pages/Forms/FormElements.tsx";
 import TotalClubs from "./components/custom/TotalClubs.jsx";
 import TotalDoctors from "./components/custom/TotalDoctors.jsx";
 import TotalSportsPerson from "./components/custom/TotalSportsPerson.jsx";
+import TotalProducts from "./components/custom/TotalProducts.jsx";
+import TotalCategory from "./components/custom/TotalCategories.jsx";
+
 import Blank from "./pages/Blank.tsx";
 import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop.tsx";
@@ -59,6 +62,9 @@ export default function App() {
               <Route path="/total-clubs" element={<TotalClubs />} />
               <Route path="/total-doctors" element={<TotalDoctors />} />
               <Route path="/total-sports-person" element={<TotalSportsPerson />} />
+              <Route path="/total-products" element={<TotalProducts />} />
+              <Route path="/total-categories" element={<TotalCategory />} />
+
             </Route>
           </Route>
 

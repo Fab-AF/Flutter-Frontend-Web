@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllUsers } from '../../redux/auth/authSlice';
 import { LuUserCheck } from 'react-icons/lu';
 import { FiEdit, FiEye, FiTrash2 } from 'react-icons/fi';
+import { FaUserDoctor } from 'react-icons/fa6';
 
 const columns = [
   { name: "ID", selector: (row) => row._id, sortable: true },
@@ -115,7 +116,7 @@ const TotalDoctors = () => {
   return (
     <div className={`rounded-2xl border border-gray-200 bg-white p-5 md:p-6 ${themeClasses.container}`}>
       <div className="mb-4">
-        <h3 className={`text-lg font-semibold ${themeClasses.text}`}>Total Doctors: {totalDoctors}</h3>
+        <h3 className={`text-lg font-semibold flex items-center gap-2 ${themeClasses.text}`}><FaUserDoctor className='w-6 h-6'/> Total Doctors: {totalDoctors}</h3>
       </div>
       <input
         type="text"

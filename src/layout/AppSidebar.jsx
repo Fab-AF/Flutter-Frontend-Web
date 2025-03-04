@@ -6,6 +6,8 @@ import { RiHotelLine } from "react-icons/ri";
 import { FaUserDoctor } from "react-icons/fa6";
 import { MdSportsMartialArts } from "react-icons/md";
 import { FiMoreHorizontal } from "react-icons/fi";
+import { BiCategory } from "react-icons/bi";
+import { TbReportMedical } from "react-icons/tb";
 
 import { useSidebar } from "../context/SidebarContext";
 
@@ -16,19 +18,41 @@ const navItems = [
     path: "/dashboard",
   },
   {
-    name: "Total Clubs",
-    icon: <RiHotelLine />,
-    path: "/total-clubs",
-  },
-  {
-    name: "Total Doctors",
+    name: "Users",
     icon: <FaUserDoctor />,
-    path: "/total-doctors",
+    subItems: [
+      {
+        name: "Total Clubs",
+        path: "/total-clubs",
+        icon: <RiHotelLine />,
+      },
+      {
+        name: "Total Doctors",
+        path: "/total-doctors",
+        icon: <FaUserDoctor />,
+      },
+      {
+        name: "Total Sports Person",
+        path: "/total-sports-person",
+        icon: <MdSportsMartialArts />,
+      },
+    ],
   },
   {
-    name: "Total Sports Person",
-    icon: <MdSportsMartialArts />,
-    path: "/total-sports-person",
+    name: "Products",
+    icon: <TbReportMedical />,
+    subItems: [
+      {
+        name: "Total Medicine",
+        path: "/total-products",
+        icon: <TbReportMedical />,
+      },
+      {
+        name: "Total Categories",
+        path: "/total-categories",
+        icon: <BiCategory />,
+      },
+    ],
   },
 ];
 
@@ -182,30 +206,6 @@ const AppSidebar = () => {
                       }`}
                     >
                       {subItem.name}
-                      <span className="flex items-center gap极1 ml-auto">
-                        {subItem.new && (
-                          <span
-                            className={`ml-auto ${
-                              isActive(subItem.path)
-                                ? "menu-dropdown-badge-active"
-                                : "menu-dropdown-badge-inactive"
-                            } menu-dropdown-badge`}
-                          >
-                            new
-                          </span>
-                        )}
-                        {subItem.pro && (
-                          <span
-                            className={`ml-auto ${
-                              isActive(subItem.path)
-                                ? "menu-dropdown-badge-active"
-                                : "menu-dropdown-badge-inactive"
-                            } menu-dropdown-badge`}
-                          >
-                            pro
-                          </span>
-                        )}
-                      </span>
                     </Link>
                   </li>
                 ))}
@@ -267,7 +267,7 @@ const AppSidebar = () => {
       </div>
       <div className="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
         <nav className="mb-6">
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap极4">
             <div>
               <h2
                 className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllUsers } from '../../redux/auth/authSlice';
 import { FiEye, FiEdit, FiTrash2 } from 'react-icons/fi';
 import { LuUserCheck } from "react-icons/lu";
+import { RiHotelLine } from 'react-icons/ri';
 
 
 const columns = [
@@ -116,7 +117,7 @@ const TotalClubs = () => {
   return (
     <div className={`rounded-2xl border border-gray-200 bg-white p-5 md:p-6 ${themeClasses.container}`}>
       <div className="mb-4">
-        <h3 className={`text-lg font-semibold ${themeClasses.text}`}>Total Clubs: {totalClubs}</h3>
+        <h3 className={`text-lg font-semibold flex items-center gap-2 ${themeClasses.text}`}><RiHotelLine className='h-6 w-6'/> Total Clubs: {totalClubs}</h3>
       </div>
       <input
         type="text"

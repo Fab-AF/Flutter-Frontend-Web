@@ -1,19 +1,38 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useMemo, useState } from 'react';
+import DataTable from 'react-data-table-component';
 import { useTheme } from '../../context/ThemeContext.js';
-import DataTable from "react-data-table-component";
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchAllUsers } from '../../redux/auth/authSlice';
-import { FiEdit, FiEye, FiTrash2 } from 'react-icons/fi';
+import { TbReportMedical } from 'react-icons/tb';
 import { LuUserCheck } from 'react-icons/lu';
-import { MdSportsMartialArts } from 'react-icons/md';
+import { FiEdit, FiEye, FiTrash2 } from 'react-icons/fi';
 
 const columns = [
-  { name: "ID", selector: (row) => row._id, sortable: true },
-  { name: "Name", selector: (row) => row.name, sortable: true },
-  { name: "Email", selector: (row) => row.email },
-  { name: "Role", selector: (row) => row.role },
   {
-    name: "Actions",
+    name: 'ID',
+    selector: row => row.id,
+    sortable: true,
+  },
+  {
+    name: 'Product Name',
+    selector: row => row.name,
+    sortable: true,
+  },
+  {
+    name: 'Category',
+    selector: row => row.category,
+    sortable: true,
+  },
+  {
+    name: 'Price',
+    selector: row => row.price,
+    sortable: true,
+  },
+  {
+    name: 'Stock',
+    selector: row => row.stock,
+    sortable: true,
+  },
+  {
+    name: 'Actions',
     cell: (row) => (
       <div className="flex gap-2">
         <button className="p-1 text-gray-500 hover:text-blue-600 dark:hover:text-blue-400">
@@ -33,14 +52,48 @@ const columns = [
   },
 ];
 
-const TotalSportsPerson = () => {
-  const dispatch = useDispatch();
-  const { usersLoading, usersError } = useSelector((state) => state.auth);
-  const { theme } = useTheme();
-  const [search, setSearch] = useState("");
-  const [allData, setAllData] = useState([]);
-  const [totalSportsPersons, setTotalSportsPersons] = useState(0);
+const data = [
+  {
+    id: 1,
+    name: 'Laptop Pro',
+    category: 'Electronics',
+    price: '$1200',
+    stock: 25
+  },
+  {
+    id: 2,
+    name: 'Running Shoes',
+    category: 'Sports',
+    price: '$80',
+    stock: 50
+  },
+  {
+    id: 3,
+    name: 'Wireless Headphones',
+    category: 'Electronics',
+    price: '$150',
+    stock: 30
+  },
+  {
+    id: 4,
+    name: 'Yoga Mat',
+    category: 'Fitness',
+    price: '$25',
+    stock: 100
+  },
+  {
+    id: 5,
+    name: 'Smart Watch',
+    category: 'Wearables',
+    price: '$200',
+    stock: 40
+  },
+];
 
+const TotalProducts = () => {
+  const { theme } = useTheme();
+  const [search, setSearch] = useState('');
+  
   const themeClasses = useMemo(() => ({
     container: theme === 'dark' ? 'dark:border-gray-800 dark:bg-white/[0.03]' : '',
     text: theme === 'dark' ? 'dark:text-white/90' : 'text-gray-800',
@@ -49,34 +102,13 @@ const TotalSportsPerson = () => {
   }), [theme]);
 
   const filteredData = useMemo(() => {
-    if (!search) return allData;
-    return allData.filter((row) =>
+    if (!search) return data;
+    return data.filter((row) =>
       Object.values(row).some(value => 
         value?.toString().toLowerCase().includes(search.toLowerCase())
       )
     );
-  }, [search, allData]);
-
-  const fetchData = useCallback(async () => {
-    try {
-      const result = await dispatch(fetchAllUsers());
-      if (result.payload?.users?.sportspersons) {
-        const sportspersons = result.payload.users.sportspersons;
-        setAllData(sportspersons);
-        setTotalSportsPersons(sportspersons.length);
-      } else {
-        throw new Error('Invalid data format');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      setAllData([]);
-      setTotalSportsPersons(0);
-    }
-  }, [dispatch]);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+  }, [search]);
 
   const handleSearch = (event) => {
     setSearch(event.target.value);
@@ -116,32 +148,28 @@ const TotalSportsPerson = () => {
   return (
     <div className={`rounded-2xl border border-gray-200 bg-white p-5 md:p-6 ${themeClasses.container}`}>
       <div className="mb-4">
-        <h3 className={`text-lg font-semibold flex items-center gap-2 ${themeClasses.text}`}><MdSportsMartialArts className='w-6 h-6'/> Total Sportspersons: {totalSportsPersons}</h3>
+        <h3 className={`text-lg font-semibold flex items-center gap-2 ${themeClasses.text}`}>
+          <TbReportMedical className='w-6 h-6'/> Total Medicine: {data.length}
+        </h3>
       </div>
       <input
         type="text"
-        placeholder="Search sportspersons..."
+        placeholder="Search medicine..."
         value={search}
         onChange={handleSearch}
         className={`mb-4 p-2 border rounded w-full ${themeClasses.input} ${themeClasses.placeholder}`}
       />
-      {usersLoading ? (
-        <p className={themeClasses.text}>Loading...</p>
-      ) : usersError ? (
-        <p className="text-red-500">Error: {usersError}</p>
-      ) : (
-        <DataTable
-          columns={columns}
-          data={filteredData}
-          pagination
-          highlightOnHover
-          theme={theme === 'dark' ? 'dark' : 'default'}
-          customStyles={tableCustomStyles}
-          noDataComponent="No sportspersons found"
-        />
-      )}
+      <DataTable
+        columns={columns}
+        data={filteredData}
+        pagination
+        highlightOnHover
+        theme={theme === 'dark' ? 'dark' : 'default'}
+        customStyles={tableCustomStyles}
+        noDataComponent="No medicine found"
+      />
     </div>
   );
 }
 
-export default TotalSportsPerson;
+export default TotalProducts;
