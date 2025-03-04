@@ -12,6 +12,16 @@ const columns = [
   { name: "Name", selector: (row) => row.name, sortable: true },
   { name: "Email", selector: (row) => row.email },
   { name: "Role", selector: (row) => row.role },
+  { 
+    name: "Created By", 
+    selector: (row) => row.createdBy?.name || 'N/A',
+    sortable: true 
+  },
+  { 
+    name: "Created At", 
+    selector: (row) => new Date(row.createdAt).toLocaleDateString(),
+    sortable: true 
+  },
   {
     name: "Actions",
     cell: (row) => (
@@ -44,17 +54,22 @@ const TotalSportsPerson = () => {
   const themeClasses = useMemo(() => ({
     container: theme === 'dark' ? 'dark:border-gray-800 dark:bg-white/[0.03]' : '',
     text: theme === 'dark' ? 'dark:text-white/90' : 'text-gray-800',
-    input: theme === 'dark' ? 'dark:bg-gray-800 dark:text-white/90' : '',
+    input: theme === 'dark' ? 'dark:bg-gray-8dark:text-white/90' : '',
     placeholder: theme === 'dark' ? 'placeholder-gray-400' : 'placeholder-gray-500',
   }), [theme]);
 
   const filteredData = useMemo(() => {
     if (!search) return allData;
-    return allData.filter((row) =>
-      Object.values(row).some(value => 
-        value?.toString().toLowerCase().includes(search.toLowerCase())
-      )
-    );
+    return allData.filter((row) => {
+      const searchLower = search.toLowerCase();
+      return (
+        row.name?.toLowerCase().includes(searchLower) ||
+        row.email?.toLowerCase().includes(searchLower) ||
+        row.role?.toLowerCase().includes(searchLower) ||
+        row.createdBy?.name?.toLowerCase().includes(searchLower) ||
+        new Date(row.createdAt).toLocaleDateString().includes(searchLower)
+      );
+    });
   }, [search, allData]);
 
   const fetchData = useCallback(async () => {
@@ -78,9 +93,9 @@ const TotalSportsPerson = () => {
     fetchData();
   }, [fetchData]);
 
-  const handleSearch = (event) => {
+  const handleSearch = useCallback((event) => {
     setSearch(event.target.value);
-  };
+  }, []);
 
   const tableCustomStyles = useMemo(() => ({
     table: {

@@ -16,7 +16,7 @@ const LayoutContent = () => {
         <Backdrop />
       </div>
       <div
-        className={`flex-1 transition-all duration-300 ease-in-out ${
+        className={`flex-1 transition-all duration-300 ease-in-out width-fill-available  ${
           isExpanded || isHovered ? "lg:ml-[290px]" : "lg:ml-[90px]"
         } ${isMobileOpen ? "ml-0" : ""} ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'}`}
       >

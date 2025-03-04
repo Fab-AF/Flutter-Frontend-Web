@@ -1,99 +1,17 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import DataTable from 'react-data-table-component';
 import { useTheme } from '../../context/ThemeContext.js';
-import { TbReportMedical } from 'react-icons/tb';
-import { LuUserCheck } from 'react-icons/lu';
 import { FiEdit, FiEye, FiTrash2 } from 'react-icons/fi';
-
-const columns = [
-  {
-    name: 'ID',
-    selector: row => row.id,
-    sortable: true,
-  },
-  {
-    name: 'Product Name',
-    selector: row => row.name,
-    sortable: true,
-  },
-  {
-    name: 'Category',
-    selector: row => row.category,
-    sortable: true,
-  },
-  {
-    name: 'Price',
-    selector: row => row.price,
-    sortable: true,
-  },
-  {
-    name: 'Stock',
-    selector: row => row.stock,
-    sortable: true,
-  },
-  {
-    name: 'Actions',
-    cell: (row) => (
-      <div className="flex gap-2">
-        <button className="p-1 text-gray-500 hover:text-blue-600 dark:hover:text-blue-400">
-          <FiEye size={18} />
-        </button>
-        <button className="p-1 text-gray-500 hover:text-purple-600 dark:hover:text-purple-400">
-          <LuUserCheck size={18} />
-        </button>
-        <button className="p-1 text-gray-500 hover:text-green-600 dark:hover:text-green-400">
-          <FiEdit size={18} />
-        </button>
-        <button className="p-1 text-gray-500 hover:text-red-600 dark:hover:text-red-400">
-          <FiTrash2 size={18} />
-        </button>
-      </div>
-    ),
-  },
-];
-
-const data = [
-  {
-    id: 1,
-    name: 'Laptop Pro',
-    category: 'Electronics',
-    price: '$1200',
-    stock: 25
-  },
-  {
-    id: 2,
-    name: 'Running Shoes',
-    category: 'Sports',
-    price: '$80',
-    stock: 50
-  },
-  {
-    id: 3,
-    name: 'Wireless Headphones',
-    category: 'Electronics',
-    price: '$150',
-    stock: 30
-  },
-  {
-    id: 4,
-    name: 'Yoga Mat',
-    category: 'Fitness',
-    price: '$25',
-    stock: 100
-  },
-  {
-    id: 5,
-    name: 'Smart Watch',
-    category: 'Wearables',
-    price: '$200',
-    stock: 40
-  },
-];
+import { LuUserCheck } from 'react-icons/lu';
+import { fetchProducts } from '../../redux/products/productSlice.js';
 
 const TotalProducts = () => {
+  const dispatch = useDispatch();
   const { theme } = useTheme();
   const [search, setSearch] = useState('');
-  
+  const { products, loading, error } = useSelector((state) => state.product);
+
   const themeClasses = useMemo(() => ({
     container: theme === 'dark' ? 'dark:border-gray-800 dark:bg-white/[0.03]' : '',
     text: theme === 'dark' ? 'dark:text-white/90' : 'text-gray-800',
@@ -101,18 +19,106 @@ const TotalProducts = () => {
     placeholder: theme === 'dark' ? 'placeholder-gray-400' : 'placeholder-gray-500',
   }), [theme]);
 
-  const filteredData = useMemo(() => {
-    if (!search) return data;
-    return data.filter((row) =>
-      Object.values(row).some(value => 
-        value?.toString().toLowerCase().includes(search.toLowerCase())
-      )
-    );
-  }, [search]);
+  const columns = useMemo(() => [
+    {
+      name: 'ID',
+      selector: row => row._id,
+      sortable: true,
+    },
+    {
+      name: 'Product Name',
+      selector: row => row.name,
+      sortable: true,
+    },
+    {
+      name: 'Category',
+      selector: row => row.category?.name || 'Uncategorized',
+      sortable: true,
+    },
+    {
+      name: 'Price',
+      selector: row => row.price || 'N/A',
+      sortable: true,
+    },
+    {
+      name: 'Manufacturer',
+      selector: row => row.manufacturer || 'N/A',
+      sortable: true,
+    },
+    {
+      name: 'Batch Number',
+      selector: row => row.batchNumber || 'N/A',
+      sortable: true,
+    },
+    {
+      name: 'Expiry Date',
+      selector: row => new Date(row.expiryDate).toLocaleDateString() || 'N/A',
+      sortable: true,
+    },
+    {
+      name: 'Stock Quantity',
+      selector: row => row.stockQuantity || 'N/A',
+      sortable: true,
+    },
+    {
+      name: 'Created By',
+      selector: row => row.createdBy?.name || 'N/A',
+      sortable: true,
+    },
+    {
+      name: 'Created At',
+      selector: row => new Date(row.createdAt).toLocaleDateString(),
+      sortable: true,
+    },
+    {
+      name: 'Actions',
+      cell: (row) => (
+        <div className="flex gap-2">
+          <button 
+            className="p-1 text-gray-5 hover:text-blue-600 dark:hover:text-blue-400"
+            onClick={() => console.log('View clicked for:', row._id)}
+          >
+            <FiEye size={18} />
+          </button>
+          <button className="p-1 text-gray-500 hover:text-purple-600 dark:hover:text-purple-400">
+            <LuUserCheck size={18} />
+          </button>
+          <button 
+            className="p-1 text-gray-500 hover:text-green-600 dark:hover:text-green-400"
+            onClick={() => console.log('Edit clicked for:', row._id)}
+          >
+            <FiEdit size={18} />
+          </button>
+          <button 
+            className="p-1 text-gray-500 hover:text-red-600 dark:hover:text-red-400"
+            onClick={() => console.log('Delete clicked for:', row._id)}
+          >
+            <FiTrash2 size={18} />
+          </button>
+        </div>
+      ),
+    },
+  ], []);
 
-  const handleSearch = (event) => {
+  const filteredData = useMemo(() => {
+    if (!search) return products;
+    return products.filter((row) => {
+      const searchLower = search.toLowerCase();
+      return (
+        row.name?.toLowerCase().includes(searchLower) ||
+        row.category?.name?.toLowerCase().includes(searchLower) ||
+        row.price?.toString().includes(searchLower) ||
+        row.manufacturer?.toLowerCase().includes(searchLower) ||
+        row.batchNumber?.toLowerCase().includes(searchLower) ||
+        new Date(row.expiryDate).toLocaleDateString().includes(searchLower) ||
+        row.createdBy?.name?.toLowerCase().includes(searchLower)
+      );
+    });
+  }, [search, products]);
+
+  const handleSearch = useCallback((event) => {
     setSearch(event.target.value);
-  };
+  }, []);
 
   const tableCustomStyles = useMemo(() => ({
     table: {
@@ -145,31 +151,40 @@ const TotalProducts = () => {
     },
   }), [theme]);
 
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
+
   return (
     <div className={`rounded-2xl border border-gray-200 bg-white p-5 md:p-6 ${themeClasses.container}`}>
       <div className="mb-4">
-        <h3 className={`text-lg font-semibold flex items-center gap-2 ${themeClasses.text}`}>
-          <TbReportMedical className='w-6 h-6'/> Total Medicine: {data.length}
+        <h3 className={`text-lg font-semibold ${themeClasses.text}`}>
+          Product List
         </h3>
       </div>
       <input
         type="text"
-        placeholder="Search medicine..."
+        placeholder="Search products..."
         value={search}
         onChange={handleSearch}
         className={`mb-4 p-2 border rounded w-full ${themeClasses.input} ${themeClasses.placeholder}`}
       />
-      <DataTable
-        columns={columns}
-        data={filteredData}
-        pagination
-        highlightOnHover
-        theme={theme === 'dark' ? 'dark' : 'default'}
-        customStyles={tableCustomStyles}
-        noDataComponent="No medicine found"
-      />
+      {loading ? (
+        <p className={themeClasses.text}>Loading...</p>
+      ) : error ? (
+        <p className="text-red-500">Error: {error}</p>
+      ) : (
+        <DataTable
+          columns={columns}
+          data={filteredData}
+          pagination
+          highlightOnHover
+          theme={theme === 'dark' ? 'dark' : 'default'}
+          customStyles={tableCustomStyles}
+        />
+      )}
     </div>
   );
-}
+};
 
 export default TotalProducts;

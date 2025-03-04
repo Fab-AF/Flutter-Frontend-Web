@@ -7,12 +7,21 @@ import { FiEye, FiEdit, FiTrash2 } from 'react-icons/fi';
 import { LuUserCheck } from "react-icons/lu";
 import { RiHotelLine } from 'react-icons/ri';
 
-
 const columns = [
   { name: "ID", selector: (row) => row._id, sortable: true },
   { name: "Name", selector: (row) => row.name, sortable: true },
   { name: "Email", selector: (row) => row.email },
   { name: "Role", selector: (row) => row.role },
+  { 
+    name: "Created By", 
+    selector: (row) => row.createdBy?.name || 'N/A',
+    sortable: true 
+  },
+  { 
+    name: "Created At", 
+    selector: (row) => new Date(row.createdAt).toLocaleDateString(),
+    sortable: true 
+  },
   {
     name: "Actions",
     cell: (row) => (
@@ -51,11 +60,16 @@ const TotalClubs = () => {
 
   const filteredData = useMemo(() => {
     if (!search) return allData;
-    return allData.filter((row) =>
-      Object.values(row).some(value => 
-        value?.toString().toLowerCase().includes(search.toLowerCase())
-      )
-    );
+    return allData.filter((row) => {
+      const searchLower = search.toLowerCase();
+      return (
+        row.name?.toLowerCase().includes(searchLower) ||
+        row.email?.toLowerCase().includes(searchLower) ||
+        row.role?.toLowerCase().includes(searchLower) ||
+        row.createdBy?.name?.toLowerCase().includes(searchLower) ||
+        new Date(row.createdAt).toLocaleDateString().includes(searchLower)
+      );
+    });
   }, [search, allData]);
 
   const fetchData = useCallback(async () => {

@@ -1,14 +1,16 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import DataTable from 'react-data-table-component';
 import { useTheme } from '../../context/ThemeContext.js';
 import { BiCategory } from 'react-icons/bi';
 import { LuUserCheck } from 'react-icons/lu';
 import { FiEdit, FiEye, FiTrash2 } from 'react-icons/fi';
+import { fetchCategories } from '../../redux/category/categorySlice';
 
 const columns = [
   {
     name: 'ID',
-    selector: row => row.id,
+    selector: row => row._id,
     sortable: true,
   },
   {
@@ -17,13 +19,18 @@ const columns = [
     sortable: true,
   },
   {
-    name: 'Products Count',
-    selector: row => row.count,
+    name: 'Description',
+    selector: row => row.description,
     sortable: true,
   },
   {
-    name: 'Status',
-    selector: row => row.status,
+    name: 'Created By',
+    selector: row => row.createdBy?.name || 'N/A',
+    sortable: true,
+  },
+  {
+    name: 'Created At',
+    selector: row => new Date(row.createdAt).toLocaleDateString(),
     sortable: true,
   },
   {
@@ -47,43 +54,12 @@ const columns = [
   },
 ];
 
-const data = [
-  {
-    id: 1,
-    name: 'Electronics',
-    count: 120,
-    status: 'Active'
-  },
-  {
-    id: 2,
-    name: 'Clothing',
-    count: 85,
-    status: 'Active'
-  },
-  {
-    id: 3,
-    name: 'Furniture',
-    count: 45,
-    status: 'Inactive'
-  },
-  {
-    id: 4,
-    name: 'Books',
-    count: 200,
-    status: 'Active'
-  },
-  {
-    id: 5,
-    name: 'Sports',
-    count: 60,
-    status: 'Active'
-  },
-];
-
 const TotalCategories = () => {
+  const dispatch = useDispatch();
   const { theme } = useTheme();
   const [search, setSearch] = useState('');
-  
+  const { categories, loading, error } = useSelector((state) => state.category);
+
   const themeClasses = useMemo(() => ({
     container: theme === 'dark' ? 'dark:border-gray-800 dark:bg-white/[0.03]' : '',
     text: theme === 'dark' ? 'dark:text-white/90' : 'text-gray-800',
@@ -92,17 +68,21 @@ const TotalCategories = () => {
   }), [theme]);
 
   const filteredData = useMemo(() => {
-    if (!search) return data;
-    return data.filter((row) =>
-      Object.values(row).some(value => 
-        value?.toString().toLowerCase().includes(search.toLowerCase())
-      )
-    );
-  }, [search]);
+    if (!search) return categories;
+    return categories.filter((row) => {
+      const searchLower = search.toLowerCase();
+      return (
+        row.name?.toLowerCase().includes(searchLower) ||
+        row.description?.toLowerCase().includes(searchLower) ||
+        row.createdBy?.name?.toLowerCase().includes(searchLower) ||
+        new Date(row.createdAt).toLocaleDateString().includes(searchLower)
+      );
+    });
+  }, [search, categories]);
 
-  const handleSearch = (event) => {
+  const handleSearch = useCallback((event) => {
     setSearch(event.target.value);
-  };
+  }, []);
 
   const tableCustomStyles = useMemo(() => ({
     table: {
@@ -135,11 +115,15 @@ const TotalCategories = () => {
     },
   }), [theme]);
 
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
+
   return (
     <div className={`rounded-2xl border border-gray-200 bg-white p-5 md:p-6 ${themeClasses.container}`}>
       <div className="mb-4">
         <h3 className={`text-lg font-semibold flex items-center gap-2 ${themeClasses.text}`}>
-          <BiCategory className='w-6 h-6'/> Total Categories: {data.length}
+          <BiCategory className='w-6 h-6'/> Total Categories: {categories.length}
         </h3>
       </div>
       <input
@@ -149,15 +133,21 @@ const TotalCategories = () => {
         onChange={handleSearch}
         className={`mb-4 p-2 border rounded w-full ${themeClasses.input} ${themeClasses.placeholder}`}
       />
-      <DataTable
-        columns={columns}
-        data={filteredData}
-        pagination
-        highlightOnHover
-        theme={theme === 'dark' ? 'dark' : 'default'}
-        customStyles={tableCustomStyles}
-        noDataComponent="No categories found"
-      />
+      {loading ? (
+        <p className={themeClasses.text}>Loading...</p>
+      ) : error ? (
+        <p className="text-red-500">Error: {error}</p>
+      ) : (
+        <DataTable
+          columns={columns}
+          data={filteredData}
+          pagination
+          highlightOnHover
+          theme={theme === 'dark' ? 'dark' : 'default'}
+          customStyles={tableCustomStyles}
+          noDataComponent="No categories found"
+        />
+      )}
     </div>
   );
 }
