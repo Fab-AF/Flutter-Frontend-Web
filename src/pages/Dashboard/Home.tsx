@@ -37,7 +37,6 @@ export default function Home() {
     const updatedValues = { ...values, role: 'club' };
     try {
       const response = await dispatch(registerUser(updatedValues)).unwrap(); // Dispatch registerUser action
-      console.log("Sign in response:", response); 
       if (response.result == true) { 
         toast.success(response.message); 
        // localStorage.setItem('user', JSON.stringify(response.user)); // Store user data in local storage
