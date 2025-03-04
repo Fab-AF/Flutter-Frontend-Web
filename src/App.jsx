@@ -19,7 +19,7 @@ import Roles from "./components/custom/Roles.jsx";
 import Blank from "./pages/Blank.tsx";
 import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop.tsx";
-import Home from "./pages/Dashboard/Home.tsx";
+import Home from "./pages/Dashboard/Home.jsx";
 import ProtectedRoute from "./components/auth/ProtectedRoute.jsx";
 import cookie from "js-cookie";
 

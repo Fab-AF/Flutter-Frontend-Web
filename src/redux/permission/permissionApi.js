@@ -9,7 +9,9 @@ export const getPermissions = async () => {
   try {
     const token = Cookies.get("token");
     const response = await axios.get(`${baseurl}/permissions`, {
-     
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     });
     return response.data;
   } catch (error) {
@@ -63,7 +65,9 @@ export const getPermissionById = async (id) => {
   try {
     const token = Cookies.get("token");
     const response = await axios.get(`${baseurl}/permissions/${id}`, {
-      
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     });
     return response.data;
   } catch (error) {

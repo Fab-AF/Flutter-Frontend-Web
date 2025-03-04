@@ -33,7 +33,7 @@ export default function Home() {
     setIsModalVisible(false);
   };
 
-  const onFinish = async (values: any) => {
+  const onFinish = async (values) => {
     const updatedValues = { ...values, role: 'club' };
     try {
       const response = await dispatch(registerUser(updatedValues)).unwrap(); // Dispatch registerUser action
