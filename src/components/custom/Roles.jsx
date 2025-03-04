@@ -55,13 +55,17 @@ const Roles = () => {
     container: theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-800',
     label: theme === 'dark' ? 'text-gray-300' : 'text-gray-700',
     toggle: {
-      base: 'relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700',
-      after: "after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600",
-      checked: theme === 'dark' ? 'peer-checked:bg-blue-400' : 'peer-checked:bg-blue-500',
-      focus: theme === 'dark' ? 'peer-focus:ring-blue-400' : 'peer-focus:ring-blue-300'
+      base: 'relative w-11 h-6 rounded-full peer transition-colors',
+      unchecked: theme === 'dark' ? 'bg-gray-600' : 'bg-gray-200', // Unchecked BG
+      checked: 'peer-checked:bg-blue-500', // Checked BG (blue)
+      after: "after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white",
+      focus: theme === 'dark' ? 'peer-focus:ring-blue-500' : 'peer-focus:ring-blue-300'
     },
     card: theme === 'dark' ? 'border-gray-700 shadow-xs' : 'border-gray-200 shadow-sm'
   };
+  
+  
+
 
   console.log('Current permissions state:', permissions);
   console.log('Loading state:', loading);
@@ -88,7 +92,8 @@ const Roles = () => {
                     className="sr-only peer"
                     disabled={loading}
                   />
-                  <div className={`${themeClasses.toggle.base} peer-focus:ring-4 ${themeClasses.toggle.focus} peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white ${themeClasses.toggle.after} ${themeClasses.toggle.checked}`}></div>
+                  <div className={`${themeClasses.toggle.base} ${themeClasses.toggle.unchecked} peer-focus:ring-4 ${themeClasses.toggle.focus} ${themeClasses.toggle.checked} ${themeClasses.toggle.after}`}></div>
+
                   <span className={`ms-3 text-sm font-medium capitalize ${themeClasses.label}`}>
                     {key.replace('_', ' ')}
                   </span>
