@@ -21,6 +21,7 @@ export default function UserDropdown() {
     try {
       await logout(); // Call the logout API
       Cookies.remove("token"); // Remove token from cookies
+      localStorage.removeItem('user');
       navigate("/"); // Redirect to sign-in page after logout
     } catch (error) {
       console.error("Logout failed", error); // Handle error appropriately
@@ -39,9 +40,8 @@ export default function UserDropdown() {
 
         <span className="block mr-1 font-medium text-theme-sm">Musharof</span>
         <svg
-          className={`stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200 ${
-            isOpen ? "rotate-180" : ""
-          }`}
+          className={`stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""
+            }`}
           width="18"
           height="20"
           viewBox="0 0 18 20"

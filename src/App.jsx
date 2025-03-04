@@ -13,6 +13,8 @@ import TotalDoctors from "./components/custom/TotalDoctors.jsx";
 import TotalSportsPerson from "./components/custom/TotalSportsPerson.jsx";
 import TotalProducts from "./components/custom/TotalProducts.jsx";
 import TotalCategory from "./components/custom/TotalCategories.jsx";
+import Roles from "./components/custom/Roles.jsx";
+
 
 import Blank from "./pages/Blank.tsx";
 import AppLayout from "./layout/AppLayout";
@@ -64,7 +66,7 @@ export default function App() {
               <Route path="/total-sports-person" element={<TotalSportsPerson />} />
               <Route path="/total-products" element={<TotalProducts />} />
               <Route path="/total-categories" element={<TotalCategory />} />
-
+<Route path="/roles" element={<Roles/>}/>
             </Route>
           </Route>
 
